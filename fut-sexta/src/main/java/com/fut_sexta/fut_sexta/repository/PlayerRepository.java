@@ -1,0 +1,8 @@
+package com.fut_sexta.fut_sexta.repository;
+
+import com.fut_sexta.fut_sexta.model.Player;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PlayerRepository extends JpaRepository<Player, Long> {
+    boolean existsByName(String name);
+}
