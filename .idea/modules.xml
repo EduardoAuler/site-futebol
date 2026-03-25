@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/fut-sexta.iml" filepath="$PROJECT_DIR$/.idea/fut-sexta.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fut-sexta/fut-sexta.iml" filepath="$PROJECT_DIR$/fut-sexta/fut-sexta.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/site-futebol.iml" filepath="$PROJECT_DIR$/.idea/site-futebol.iml" />
     </modules>
   </component>
 </project>

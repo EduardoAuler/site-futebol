@@ -22,12 +22,21 @@ public class Team {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "team_players",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "player_id")
+    )
     private List<Player> players;
 
     public Team(String name){
         this.name = name;
         players = new ArrayList<>();
+    }
+
+    public void addPlayer(Player player) {
+        this.players.add(player);
     }
 
 }

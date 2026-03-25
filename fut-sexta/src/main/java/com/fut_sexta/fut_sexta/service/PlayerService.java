@@ -20,49 +20,9 @@ public class PlayerService {
         this.repository = repository;
     }
 
-    public Player findById(Long id){
-        Optional<Player> p = repository.findById(id);
-        if (p.isEmpty()) throw new NoSuchElementException("Player não encontrado");
-
-        return p.get();
-    }
-
-    public Player createPlayer(Player p){
-        if (repository.existsByName(p.getName())) throw new IllegalArgumentException("Nome já existe");
-
-        return repository.save(p);
-    }
-
-    @Transactional
-    public Player increaseGoal(Long id){
-        Player player = findById(id);
-        player.setGoals(player.getGoals() + 1);
-
-        return player;
-    }
-
-    @Transactional
-    public Player decreaseGoal(Long id){
-        Player player = findById(id);
-
-        if (player.getGoals() == 0) throw new IllegalStateException("Player não possui gols");
-        player.setGoals(player.getGoals() - 1);
-
-        return player;
-    }
-
-    @Transactional
-    public Player addTeam(Long id, Team team){
-        Player player = findById(id);
-        player.setTeam(team);
-        return player;
-    }
-
-    @Transactional
-    public Player removeTeam(Long id){
-        Player player = findById(id);
-        player.setTeam(null);
-        return player;
+    public Player createPlayer(String name){
+        if (repository.existsByName(name)) throw new IllegalArgumentException("Nome já cadastrado");
+        return repository.save(new Player(name));
     }
 
 }
