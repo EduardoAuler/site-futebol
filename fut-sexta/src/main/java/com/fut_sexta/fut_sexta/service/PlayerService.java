@@ -4,9 +4,11 @@ package com.fut_sexta.fut_sexta.service;
 import com.fut_sexta.fut_sexta.model.Player;
 import com.fut_sexta.fut_sexta.model.Team;
 import com.fut_sexta.fut_sexta.repository.PlayerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -23,6 +25,14 @@ public class PlayerService {
     public Player createPlayer(String name){
         if (repository.existsByName(name)) throw new IllegalArgumentException("Nome já cadastrado");
         return repository.save(new Player(name));
+    }
+
+    public List<String> getPlayers(){
+        return repository.findAll().stream().map(Player::getName).toList();
+    }
+
+    public Player getById(Long id){
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player não encontrado"));
     }
 
 }

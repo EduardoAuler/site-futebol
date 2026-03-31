@@ -3,35 +3,30 @@ package com.fut_sexta.fut_sexta.service;
 
 import com.fut_sexta.fut_sexta.model.Player;
 import com.fut_sexta.fut_sexta.model.Team;
-import com.fut_sexta.fut_sexta.repository.PlayerRepository;
 import com.fut_sexta.fut_sexta.repository.TeamRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
+@RequiredArgsConstructor
 public class TeamService {
 
     private final TeamRepository teamRepository;
-    private final PlayerRepository playerRepository;
+    private final PlayerService playerService;
 
 
-    public TeamService(TeamRepository teamRepository, PlayerRepository playerRepository) {
-        this.teamRepository = teamRepository;
-        this.playerRepository = playerRepository;
-    }
 
     public Team getById(Long id){
         return teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Time não encontrado"));
     }
 
 
-    public Team createTeam(Team team){
-        if (teamRepository.existsByName(team.getName())) throw new IllegalArgumentException("Nome já cadastrado");
+    public Team createTeam(String name){
+        if (teamRepository.existsByName(name)) throw new IllegalArgumentException("Nome já cadastrado");
 
-        return teamRepository.save(team);
+        return teamRepository.save(new Team(name));
     }
 
 
@@ -45,15 +40,16 @@ public class TeamService {
     }
 
     @Transactional
-    public Team addPlayer(Long id, List<Long> playersId){
+    public Team addPlayer(Long id, Long playerId){
         Team team = getById(id);
 
-        List<Player> players = playerRepository.findAllById(playersId);
+        Player player = playerService.getById(id);
 
-        players.stream()
-                .filter(p -> team.getPlayers().stream()
-                        .noneMatch(tp -> tp.getId().equals(p.getId())))
-                .forEach(team::addPlayer);
+        if (team.getPlayers().contains(player)){
+            throw new IllegalArgumentException("Player já está no time");
+        }
+
+        team.addPlayer(player);
 
         return teamRepository.save(team);
     }
