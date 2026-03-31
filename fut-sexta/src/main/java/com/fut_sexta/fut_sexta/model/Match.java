@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,8 @@ public class Match {
 
     private boolean finished;
 
+    private LocalDate localDate;
+
 
     public Match(String teamAName, String teamBName, int minutos){
         this.teamAName = teamAName;
@@ -45,6 +48,7 @@ public class Match {
         goals = new ArrayList<>();
 
         finished = false;
+        localDate = LocalDate.now();
     }
 
     public void removeGoal(Goal goal) {

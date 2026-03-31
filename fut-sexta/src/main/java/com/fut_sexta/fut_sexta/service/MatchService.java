@@ -9,29 +9,31 @@ import com.fut_sexta.fut_sexta.repository.GoalRepository;
 import com.fut_sexta.fut_sexta.repository.MatchRepository;
 import com.fut_sexta.fut_sexta.repository.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class MatchService {
 
     private final MatchRepository matchRepository;
-    private final PlayerRepository playerRepository;
+    private final PlayerService playerService;
     private final GoalRepository goalRepository;
+    private final TeamService teamService;
 
 
     public Match getById(Long id){
         return matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Partida não encontrada"));
     }
 
-    public MatchService(MatchRepository matchRepository, PlayerRepository playerRepository, GoalRepository goalRepository) {
-        this.matchRepository = matchRepository;
-        this.playerRepository = playerRepository;
-        this.goalRepository = goalRepository;
-    }
 
-    public Match createMatch(String nameA, String nameB, int minutos){
-        Match match = new Match(nameA,nameB,minutos);
+
+    public Match createMatch(Long teamAId, Long teamBId, int minutos){
+        String teamA = teamService.getById(teamAId).getName();
+        String teamB = teamService.getById(teamBId).getName();
+
+        Match match = new Match(teamA,teamB,minutos);
         return matchRepository.save(match);
     }
 
@@ -52,8 +54,7 @@ public class MatchService {
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new EntityNotFoundException("Partida não encontrada"));
 
-        Player player = playerRepository.findById(playerId)
-                .orElseThrow(() -> new EntityNotFoundException("Jogador não encontrado"));
+        Player player = playerService.getById(playerId);
 
         Goal goal = new Goal(player, match, side);
 
@@ -71,7 +72,7 @@ public class MatchService {
 
 
     @Transactional
-    public void removeGoal(Long goalId){
+    public Match removeGoal(Long goalId){
         Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new EntityNotFoundException("Gol não encontrado"));
 
         Match match = goal.getMatch();
@@ -86,5 +87,7 @@ public class MatchService {
         }
 
         goalRepository.delete(goal);
+
+        return match;
     }
 }

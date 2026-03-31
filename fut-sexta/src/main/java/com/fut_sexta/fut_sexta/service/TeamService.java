@@ -43,7 +43,7 @@ public class TeamService {
     public Team addPlayer(Long id, Long playerId){
         Team team = getById(id);
 
-        Player player = playerService.getById(id);
+        Player player = playerService.getById(playerId);
 
         if (team.getPlayers().contains(player)){
             throw new IllegalArgumentException("Player já está no time");

@@ -38,15 +38,15 @@ public class TeamController {
     }
 
     @PutMapping("/{id}/add/{playerId}")
-    public ResponseEntity<TeamDTO> addPlayer(@PathVariable Long id, @PathVariable Long playersId){
-        TeamDTO dto = mapper.toDTO(service.addPlayer(id, playersId));
+    public ResponseEntity<TeamDTO> addPlayer(@PathVariable Long id, @PathVariable Long playerId){
+        TeamDTO dto = mapper.toDTO(service.addPlayer(id, playerId));
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @PutMapping("/{id}/remove/{playerId}")
-    public ResponseEntity<TeamDTO> removePlayer(@PathVariable Long id, @PathVariable Long playersId){
-        TeamDTO dto = mapper.toDTO(service.removePlayer(id, playersId));
+    public ResponseEntity<TeamDTO> removePlayer(@PathVariable Long id, @PathVariable Long playerId){
+        TeamDTO dto = mapper.toDTO(service.removePlayer(id, playerId));
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }

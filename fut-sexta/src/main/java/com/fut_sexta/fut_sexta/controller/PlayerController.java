@@ -1,6 +1,8 @@
 package com.fut_sexta.fut_sexta.controller;
 
 
+import com.fut_sexta.fut_sexta.DTO.PlayerDTO;
+import com.fut_sexta.fut_sexta.mapper.PlayerMapper;
 import com.fut_sexta.fut_sexta.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import java.util.List;
 public class PlayerController {
 
     private final PlayerService service;
+    private final PlayerMapper mapper;
 
 
     @PostMapping
@@ -26,8 +29,9 @@ public class PlayerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<String>> getPlayers(){
-        return ResponseEntity.ok(service.getPlayers());
+    public ResponseEntity<List<PlayerDTO>> getPlayers(){
+        return ResponseEntity.ok(service.getPlayers().stream()
+                .map(mapper::toDTO).toList());
     }
 
 
