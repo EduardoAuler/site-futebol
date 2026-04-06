@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface GoalRepository extends JpaRepository<Goal, Long> {
     @Query("""
-    SELECT package com.fut_sexta.fut_sexta.dto(p.name, COUNT(g))
+    SELECT package com.fut_sexta.fut_sexta.DTO(p.name, COUNT(g))
     FROM Goal g
     JOIN g.player p
     GROUP BY p.id
