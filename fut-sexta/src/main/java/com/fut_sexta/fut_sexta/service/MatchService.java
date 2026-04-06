@@ -54,6 +54,8 @@ public class MatchService {
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new EntityNotFoundException("Partida não encontrada"));
 
+        if (match.isFinished()) throw new IllegalArgumentException("Partida já encerrada");
+
         Player player = playerService.getById(playerId);
 
         Goal goal = new Goal(player, match, side);
@@ -76,6 +78,9 @@ public class MatchService {
         Goal goal = goalRepository.findById(goalId).orElseThrow(() -> new EntityNotFoundException("Gol não encontrado"));
 
         Match match = goal.getMatch();
+
+        if (match.isFinished()) throw new IllegalArgumentException("Partida já encerrada");
+
         match.removeGoal(goal);
 
         if (goal.getTeamSide() == TeamSide.A){

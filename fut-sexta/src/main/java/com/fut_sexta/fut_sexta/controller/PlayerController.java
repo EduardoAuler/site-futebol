@@ -3,6 +3,7 @@ package com.fut_sexta.fut_sexta.controller;
 
 import com.fut_sexta.fut_sexta.DTO.PlayerDTO;
 import com.fut_sexta.fut_sexta.mapper.PlayerMapper;
+import com.fut_sexta.fut_sexta.model.Player;
 import com.fut_sexta.fut_sexta.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,11 +22,11 @@ public class PlayerController {
 
 
     @PostMapping
-    public ResponseEntity<String> createPlayer(@RequestBody String name){
-        service.createPlayer(name);
+    public ResponseEntity<PlayerDTO> createPlayer(@RequestBody String name){
+        Player p  = service.createPlayer(name);
 
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(name);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDTO(p));
     }
 
     @GetMapping

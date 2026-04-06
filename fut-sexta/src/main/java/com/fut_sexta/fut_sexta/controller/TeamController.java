@@ -22,10 +22,10 @@ public class TeamController {
     private final TeamMapper mapper;
 
     @PostMapping
-    public ResponseEntity<String> createTeam(@RequestBody String name){
-        service.createTeam(name);
+    public ResponseEntity<TeamDTO> createTeam(@RequestBody String name){
+        Team t = service.createTeam(name);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(name);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDTO(t));
     }
 
 
