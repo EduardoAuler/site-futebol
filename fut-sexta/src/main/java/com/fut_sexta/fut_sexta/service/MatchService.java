@@ -64,7 +64,7 @@ public class MatchService {
             match.setScoreA(match.getScoreA() + 1);
         }
         if (side == TeamSide.B){
-            match.setScoreB(match.getScoreA() + 1);
+            match.setScoreB(match.getScoreB() + 1);
         }
 
         goalRepository.save(goal);

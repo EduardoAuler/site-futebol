@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TeamService {
@@ -27,6 +29,10 @@ public class TeamService {
         if (teamRepository.existsByName(name)) throw new IllegalArgumentException("Nome já cadastrado");
 
         return teamRepository.save(new Team(name));
+    }
+
+    public List<Team> getTeams(){
+        return teamRepository.findAll();
     }
 
 

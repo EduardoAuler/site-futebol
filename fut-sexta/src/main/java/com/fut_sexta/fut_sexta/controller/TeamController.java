@@ -28,6 +28,14 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDTO(t));
     }
 
+    @GetMapping
+    public ResponseEntity<List<TeamDTO>> getTeams(){
+        List<TeamDTO> response = service.getTeams().stream()
+                .map(mapper::toDTO).toList();
+
+        return ResponseEntity.ok(response);
+    }
+
 
     @PatchMapping("/{id}")
     public ResponseEntity<TeamDTO> changeName(@PathVariable Long id, @RequestBody String name){

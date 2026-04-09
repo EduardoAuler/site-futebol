@@ -6,7 +6,10 @@ import com.fut_sexta.fut_sexta.model.Match;
 import com.fut_sexta.fut_sexta.service.MatchService;
 import com.fut_sexta.fut_sexta.service.TeamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+
+@Component
 @RequiredArgsConstructor
 public class MatchMapper {
 

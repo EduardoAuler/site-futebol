@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface GoalRepository extends JpaRepository<Goal, Long> {
     @Query("""
-    SELECT package com.fut_sexta.fut_sexta.DTO(p.name, COUNT(g))
+    SELECT new com.fut_sexta.fut_sexta.DTO.ArtilheiroDTO(p.name, COUNT(g))
     FROM Goal g
     JOIN g.player p
-    GROUP BY p.id
+    GROUP BY p.name
     ORDER BY COUNT(g) DESC
 """)
     List<ArtilheiroDTO> findArtilheiros();
