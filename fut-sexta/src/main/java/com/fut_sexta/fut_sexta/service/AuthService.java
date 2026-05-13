@@ -34,7 +34,7 @@ public class AuthService {
 
         userRepository.save(user);
 
-        return"User criado";
+        return "User criado";
     }
 
 }

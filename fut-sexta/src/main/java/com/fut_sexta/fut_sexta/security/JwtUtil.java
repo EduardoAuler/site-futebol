@@ -3,14 +3,18 @@ package com.fut_sexta.fut_sexta.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private final String SECRET_KEY = "fut-sexta-chave-secreta-1706";
+    private static final String SECRET_KEY = "fut-sexta-chave-secreta-super-segura-2026";
+    private static final Key KEY =
+            Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
 
     public String generateToken(String username){
@@ -18,13 +22,15 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-                .signWith(SignatureAlgorithm.ES512, SECRET_KEY)
+                .signWith(KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String getUserName(String token){
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+    public String getUsername(String token) {
+
+        return Jwts.parserBuilder()
+                .setSigningKey(KEY)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -32,7 +38,10 @@ public class JwtUtil {
 
     public boolean validate(String token){
         try{
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(KEY)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (Exception e){
             return false;
