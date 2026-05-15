@@ -1,6 +1,10 @@
 package com.fut_sexta.fut_sexta.service;
 
 
+import com.fut_sexta.fut_sexta.exception.NameAlreadyExistsException;
+import com.fut_sexta.fut_sexta.exception.PlayerAlreadyInTeamException;
+import com.fut_sexta.fut_sexta.exception.PlayerNotInTeamException;
+import com.fut_sexta.fut_sexta.exception.TeamNotFoundException;
 import com.fut_sexta.fut_sexta.model.Player;
 import com.fut_sexta.fut_sexta.model.Team;
 import com.fut_sexta.fut_sexta.repository.TeamRepository;
@@ -21,12 +25,12 @@ public class TeamService {
 
 
     public Team getById(Long id){
-        return teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Time não encontrado"));
+        return teamRepository.findById(id).orElseThrow(() -> new TeamNotFoundException("Time não encontrado"));
     }
 
 
     public Team createTeam(String name){
-        if (teamRepository.existsByName(name)) throw new IllegalArgumentException("Nome já cadastrado");
+        if (teamRepository.existsByName(name)) throw new NameAlreadyExistsException("Nome já cadastrado");
 
         return teamRepository.save(new Team(name));
     }
@@ -38,7 +42,7 @@ public class TeamService {
 
     @Transactional
     public Team changeName(Long id, String name){
-        if (teamRepository.existsByName(name)) throw new IllegalArgumentException("Nome já cadastrado");
+        if (teamRepository.existsByName(name)) throw new NameAlreadyExistsException("Nome já cadastrado");
 
         Team team = getById(id);
         team.setName(name);
@@ -52,7 +56,7 @@ public class TeamService {
         Player player = playerService.getById(playerId);
 
         if (team.getPlayers().contains(player)){
-            throw new IllegalArgumentException("Player já está no time");
+            throw new PlayerAlreadyInTeamException("Player já está no time");
         }
 
         team.addPlayer(player);
@@ -69,7 +73,7 @@ public class TeamService {
                 .removeIf(p -> p.getId().equals(playerId));
 
         if (!removed) {
-            throw new IllegalArgumentException("Player não está no time");
+            throw new PlayerNotInTeamException("Player não está no time");
         }
 
         return teamRepository.save(team);

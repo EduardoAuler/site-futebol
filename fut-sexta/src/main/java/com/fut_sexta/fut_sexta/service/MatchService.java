@@ -1,6 +1,8 @@
 package com.fut_sexta.fut_sexta.service;
 
 
+import com.fut_sexta.fut_sexta.exception.MatchAlreadyFinishedException;
+import com.fut_sexta.fut_sexta.exception.MatchNotFoundException;
 import com.fut_sexta.fut_sexta.model.Goal;
 import com.fut_sexta.fut_sexta.model.Match;
 import com.fut_sexta.fut_sexta.model.Player;
@@ -24,7 +26,11 @@ public class MatchService {
 
 
     public Match getById(Long id){
-        return matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Partida não encontrada"));
+        return matchRepository.findById(id).orElseThrow(() -> new MatchNotFoundException("Partida não encontrada"));
+    }
+
+    public void checkMatchIsFinished(Match match){
+        if (match.isFinished()) throw new MatchAlreadyFinishedException("Partida já encerrada");
     }
 
 
@@ -42,7 +48,7 @@ public class MatchService {
     public Match endMatch(Long id){
         Match match = getById(id);
 
-        if (match.isFinished()) throw new IllegalArgumentException("Partida já encerrada");
+        checkMatchIsFinished(match);
 
         match.setFinished(true);
 
@@ -52,9 +58,9 @@ public class MatchService {
     @Transactional
     public Match addGoal(Long matchId, Long playerId, TeamSide side){
         Match match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new EntityNotFoundException("Partida não encontrada"));
+                .orElseThrow(() -> new MatchNotFoundException("Partida não encontrada"));
 
-        if (match.isFinished()) throw new IllegalArgumentException("Partida já encerrada");
+        checkMatchIsFinished(match);
 
         Player player = playerService.getById(playerId);
 
@@ -79,7 +85,7 @@ public class MatchService {
 
         Match match = goal.getMatch();
 
-        if (match.isFinished()) throw new IllegalArgumentException("Partida já encerrada");
+        checkMatchIsFinished(match);
 
         match.removeGoal(goal);
 

@@ -1,6 +1,8 @@
 package com.fut_sexta.fut_sexta.service;
 
 
+import com.fut_sexta.fut_sexta.exception.NameAlreadyExistsException;
+import com.fut_sexta.fut_sexta.exception.PlayerNotFoundException;
 import com.fut_sexta.fut_sexta.model.Player;
 import com.fut_sexta.fut_sexta.model.Team;
 import com.fut_sexta.fut_sexta.repository.PlayerRepository;
@@ -22,7 +24,7 @@ public class PlayerService {
 
 
     public Player createPlayer(String name){
-        if (repository.existsByName(name)) throw new IllegalArgumentException("Nome já cadastrado");
+        if (repository.existsByName(name)) throw new NameAlreadyExistsException("Nome já cadastrado");
         return repository.save(new Player(name));
     }
 
@@ -31,7 +33,7 @@ public class PlayerService {
     }
 
     public Player getById(Long id){
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Player não encontrado"));
+        return repository.findById(id).orElseThrow(() -> new PlayerNotFoundException("Player não encontrado"));
     }
 
 }
